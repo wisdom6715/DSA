@@ -20,6 +20,23 @@ class dynamicArray{
         this.length--;
         return lastItem;
     }
+    /// still struggling with delete functionality
+    // delete(index) {
+    //     const elements = this.data[index];
+
+    //     this.shiftItems(index);
+
+    //     return elements;
+    // }
+
+    // shiftItems(index) {
+    //     for (let i = index; i < this.length - 1; i++) {
+    //         this.elements[i] = this.data[i + 1];
+    //     }
+
+    //     delete this.elements[this.length - 1];
+    //     this.length--;
+    // }
 }
 const array = new dynamicArray();
 array.push("you")
