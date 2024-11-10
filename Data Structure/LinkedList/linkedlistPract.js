@@ -38,6 +38,29 @@ class Linkedlist{
         }
         return ListArray
     }
+    /// inserting value to the middle of the list
+    insert(index, value){
+        const leader = this.traversalToIndex(index - 1)
+        const holdingPointer = leader.next;
+        const newNode = {
+            value: value,
+            next: null
+        }
+        leader.next = newNode;
+        newNode.next = holdingPointer
+        this.length++;
+        return this.printLists()
+    }
+    
+    traversalToIndex(index){
+        let counter  = 0;
+        let currentNode = this.head;
+        while (counter !== index) {
+           currentNode = currentNode.next;
+            counter++;
+        }
+        return currentNode;
+    }
 }
 const myLinkedList = new Linkedlist();
 myLinkedList.append(5);
