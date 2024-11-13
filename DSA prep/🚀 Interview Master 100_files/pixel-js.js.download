@@ -1,0 +1,91 @@
+(function() {
+  let log = () => {
+  };
+  try {
+    const ENDPOINT = "https://ingestion.apiary.beehiiv.net/api/v1/ingestion/pixel";
+    const EXPIRES_HOURS = Number("72");
+    if (ENDPOINT.includes("dev")) {
+      log = console.log;
+    }
+    log("pixel-js");
+    const urlParams = new URLSearchParams(window.location.search);
+    const bhcl_id = urlParams.get("bhcl_id");
+    if (bhcl_id) {
+      log("bhcl_id", bhcl_id);
+      const expires = Date.now() + EXPIRES_HOURS * 60 * 60 * 1e3;
+      localStorage.setItem("bhcl_id", bhcl_id);
+      localStorage.setItem("bhcl_expires", expires);
+      log("bhcl_id added to localStorage", bhcl_id);
+      log("bhcl_id expires on", expires);
+    }
+    let bhcl_id_local = localStorage.getItem("bhcl_id");
+    if (bhcl_id_local) {
+      log("bhcl_id_local from localStorage", bhcl_id_local);
+      const expires = Number(localStorage.getItem("bhcl_expires") ?? "0");
+      if (expires) {
+        const now = Date.now();
+        if (now > expires) {
+          log("bhcl_id expired, removing from localStorage");
+          localStorage.removeItem("bhcl_id");
+          localStorage.removeItem("bhcl_expires");
+          return;
+        }
+      }
+    } else {
+      log("no bhcl_id found");
+      return;
+    }
+    let [ad_network_placement_id, subscriber_id] = bhcl_id_local.split("_");
+    if (bhcl_id_local.endsWith("_SUBSCRIBER_ID")) {
+      subscriber_id = "";
+    }
+    const event_id = generateUUID();
+    const timestamp = (/* @__PURE__ */ new Date()).getTime();
+    const payload = {
+      ad_network_placement_id,
+      subscriber_id,
+      event: "pageview",
+      timestamp,
+      landed_timestamp: timestamp,
+      sent_timestamp: timestamp,
+      event_id,
+      url: window.location.href,
+      user_agent: window.navigator.userAgent
+    };
+    log("sending pageview to pixel endpoint", payload);
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify([payload])
+      // payload as array
+    }).then((response) => {
+      log("response", response.ok, response.status, response.statusText);
+      if (!response.ok) {
+        localStorage.removeItem("bhcl_id");
+        localStorage.removeItem("bhcl_expires");
+      }
+    }).catch((error) => {
+      console.error(error);
+      log("removing bhcl_id from localStorage");
+      localStorage.removeItem("bhcl_id");
+      localStorage.removeItem("bhcl_expires");
+    });
+  } catch (error) {
+    console.error(error);
+    log("removing bhcl_id from localStorage");
+    localStorage.removeItem("bhcl_id");
+    localStorage.removeItem("bhcl_expires");
+  }
+  function generateUUID() {
+    const arr = new Uint8Array(16);
+    window.crypto.getRandomValues(arr);
+    arr[6] = arr[6] & 15 | 64;
+    arr[8] = arr[8] & 63 | 128;
+    return [...arr].map((b, i) => {
+      const hex = b.toString(16).padStart(2, "0");
+      return i === 4 || i === 6 || i === 8 || i === 10 ? `-${hex}` : hex;
+    }).join("");
+  }
+})();
