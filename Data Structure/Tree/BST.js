@@ -36,12 +36,31 @@ class Node {
         }
       }
     }
-    lookup(value) {
-      
+    lookup(value){
+        let currentNode = this.root;
+        while(currentNode){
+            if(currentNode.value === value){
+                return true
+            }else if(value > currentNode.value){
+                currentNode = currentNode.right
+            }else if(value < currentNode.value){
+                currentNode = currentNode.left
+            }
+        }
+        return false
     }
-  
-    remove(value) {
-  
+    removal(value){
+        let currentNode = this.root;
+        while(currentNode){
+            if(currentNode.value == value){
+                if(!currentNode){
+                    currentNode = currentNode.right
+                }else{
+                    currentNode = currentNode.left
+                }
+                
+            }
+        }
     }
   }
   
