@@ -7,9 +7,26 @@
 
 
 function fibonacciIterative(n){
-    let i = 0;
-    let j = 1; 
+    let arr = [0, 1]
+    let result = 1;
+    let time = n - arr.length
+    for(let x = 0; x < time; x++ ){
+        if(n == 2 ){
+            return arr;
+            break;
+        }
+        if (n == 1){
+            arr.pop()
+            return arr
+        } 
+        if(n > 2){
+            result = arr[x] + arr[x + 1]
+            arr.push(result)
+        }
+    }
+    return arr;
 }
+fibonacciIterative(7)
 
 
 function fibonacciRecursive(n) {
