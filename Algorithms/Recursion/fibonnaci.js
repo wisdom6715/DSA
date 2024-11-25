@@ -10,15 +10,14 @@ function fibonacciIterative(n){
     let arr = [0, 1]
     let result = 1;
     let time = n - arr.length
+    if(n == 2 ){
+        return arr;
+    }
+    if (n == 1){
+        arr.pop()
+        return arr
+    } 
     for(let x = 0; x < time; x++ ){
-        if(n == 2 ){
-            return arr;
-            break;
-        }
-        if (n == 1){
-            arr.pop()
-            return arr
-        } 
         if(n > 2){
             result = arr[x] + arr[x + 1]
             arr.push(result)
@@ -30,5 +29,7 @@ fibonacciIterative(7)
 
 
 function fibonacciRecursive(n) {
-  
+  if(n == 1) return 1
+  if(n == 0) return 0
+  return fibonacciRecursive(n-1) + fibonacciRecursive(n-2)
 }
