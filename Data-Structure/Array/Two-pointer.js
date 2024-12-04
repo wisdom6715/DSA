@@ -21,10 +21,10 @@ const twoSums = (nums, target)=>{
     let j = nums.length - 1;
     while(i < nums.length){
         if(nums[i] + nums[j] > target){
-            nums[i ] + nums[j] != target
+            // nums[i ] + nums[j] != target
             j--;
         }else if(nums[i ] + nums[j] < target){
-            nums[i ] + nums[j] < target
+            // nums[i ] + nums[j] < target
             i++;
         }else{
             nums[i ] + nums[j] == target
